@@ -850,127 +850,6 @@
       margin-bottom: 8px;
     }
 
-    .feedback-button {
-      background: linear-gradient(135deg, #8b5cf6, #6366f1);
-      color: white;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 8px;
-      transition: all 0.2s;
-    }
-
-    .feedback-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-    }
-
-    .feedback-button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .feedback-content {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(99, 102, 241, 0.1));
-      border: 2px solid rgba(139, 92, 246, 0.3);
-      border-radius: 12px;
-      padding: 16px;
-      margin-top: 12px;
-      animation: fadeIn 0.5s ease;
-    }
-
-    .feedback-content h4 {
-      color: #6366f1;
-      font-size: 14px;
-      font-weight: 600;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .feedback-content p {
-      color: #4b5563;
-      font-size: 14px;
-      line-height: 1.6;
-      white-space: pre-wrap;
-    }
-
-    .feedback-loading {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #6366f1;
-      font-size: 14px;
-      margin-top: 12px;
-    }
-
-    .feedback-loading::after {
-      content: '...';
-      animation: dots 1.5s infinite;
-    }
-
-    @keyframes dots {
-      0%, 20% { content: '.'; }
-      40% { content: '..'; }
-      60%, 100% { content: '...'; }
-    }
-
-    .api-key-notice {
-      background: #fef3c7;
-      border: 2px solid #fbbf24;
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 20px;
-    }
-
-    .api-key-notice h3 {
-      color: #92400e;
-      font-size: 16px;
-      margin-bottom: 8px;
-    }
-
-    .api-key-notice p {
-      color: #78350f;
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
-
-    .api-key-input {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .api-key-input input {
-      flex: 1;
-      padding: 10px;
-      border: 2px solid #fbbf24;
-      border-radius: 8px;
-      font-size: 14px;
-    }
-
-    .api-key-input button {
-      padding: 10px 20px;
-      background: #f59e0b;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     #authView {
       display: block;
     }
@@ -1073,21 +952,8 @@
       <!-- Stats View -->
       <div id="statsView" class="view">
         <h2 style="margin-bottom: 20px;">Your Progress</h2>
-        
-        <!-- API Key Notice -->
-        <div id="apiKeyNotice" class="api-key-notice" style="display: none;">
-          <h3>🤖 Get AI Feedback</h3>
-          <p>Add your Claude API key to get personalized feedback on your interactions</p>
-          <div class="api-key-input">
-            <input type="password" id="apiKeyInput" placeholder="sk-ant-api03-..." />
-            <button onclick="saveApiKey()">Save Key</button>
-          </div>
-          <p style="font-size: 12px; margin-top: 8px;">Get your API key at <a href="https://console.anthropic.com/" target="_blank" style="color: #92400e; text-decoration: underline;">console.anthropic.com</a></p>
-        </div>
-
         <div class="stats-grid" id="statsGrid"></div>
         <div id="avgComfortCard"></div>
-      </div>
       </div>
     </div>
 
@@ -1108,7 +974,7 @@
       </div>
     </div>
 
-     <!-- Bottom Navigation -->
+    <!-- Bottom Navigation -->
     <div class="bottom-nav">
       <div class="nav-item active" onclick="switchView('home')">
         <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1134,12 +1000,6 @@
         </svg>
         <span>Journal</span>
       </div>
-      <div class="nav-item" onclick="switchView('stats')">
-        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-        </svg>
-        <span>Stats</span>
-      </div>
     </div>
   </div>
 
@@ -1147,9 +1007,9 @@
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getAuth, signInWithPopup, GoogleAuthProvider, signInAnonymously as firebaseSignInAnonymously, onAuthStateChanged, signOut as firebaseSignOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-    import { getDatabase, ref, set, get } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+    import { getDatabase, ref, set, get, onValue, update } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
-    // Firebase configuration - REPLACE WITH YOUR CONFIG
+    // TODO: Replace with your Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyBWYJqlgvB8KHC4PCG44iJdIScMztt6STo",
   authDomain: "restore-2079f.firebaseapp.com",
@@ -1166,14 +1026,17 @@ const firebaseConfig = {
     const auth = getAuth(app);
     const database = getDatabase(app);
 
-    // Global variables
+    // Global state
     let currentUser = null;
-    let claudeApiKey = localStorage.getItem('claudeApiKey') || '';
     let appData = {
       userProgress: { level: 1, points: 0, pointsToNextLevel: 100 },
       completedQuests: [],
       contacts: [],
-      garden: { items: [], pendingChoice: null, choicesMade: [] }
+      garden: {
+        items: [],
+        pendingChoice: null,
+        choicesMade: []
+      }
     };
 
     let currentQuest = null;
@@ -1237,7 +1100,7 @@ const firebaseConfig = {
       try {
         await signInWithPopup(auth, provider);
       } catch (error) {
-        console.error('Error signing in:', error);
+        console.error('Error signing in with Google:', error);
         alert('Failed to sign in with Google');
       }
     };
@@ -1246,7 +1109,7 @@ const firebaseConfig = {
       try {
         await firebaseSignInAnonymously(auth);
       } catch (error) {
-        console.error('Error signing in:', error);
+        console.error('Error signing in anonymously:', error);
         alert('Failed to sign in');
       }
     };
@@ -1286,16 +1149,19 @@ const firebaseConfig = {
       
       if (snapshot.exists()) {
         appData = snapshot.val();
+        // Ensure garden structure exists
         if (!appData.garden) {
           appData.garden = { items: [], pendingChoice: null, choicesMade: [] };
         }
       } else {
+        // Initialize new user
         await saveUserData();
       }
     }
 
     async function saveUserData() {
       if (!currentUser) return;
+      
       const userRef = ref(database, 'users/' + currentUser.uid);
       await set(userRef, appData);
     }
@@ -1314,7 +1180,7 @@ const firebaseConfig = {
       if (viewName === 'stats') renderStats();
     };
 
-    // Render functions
+    // Home View
     function renderHome() {
       const { level, points, pointsToNextLevel } = appData.userProgress;
       const progress = ((points % pointsToNextLevel) / pointsToNextLevel) * 100;
@@ -1332,6 +1198,7 @@ const firebaseConfig = {
       const weeklyCompleted = isWeeklyQuestCompleted();
       document.getElementById('weeklyProgressText').textContent = weeklyCompleted ? '✓ Weekly quest complete!' : 'Weekly quest available';
 
+      // Render daily quests
       const dailyContainer = document.getElementById('dailyQuestsContainer');
       dailyContainer.innerHTML = dailyQuests.map(quest => {
         const completedCount = appData.completedQuests.filter(
@@ -1358,6 +1225,7 @@ const firebaseConfig = {
         `;
       }).join('');
 
+      // Render weekly quest
       const weeklyContainer = document.getElementById('weeklyQuestContainer');
       weeklyContainer.innerHTML = `
         <div class="quest-card weekly ${weeklyCompleted ? 'completed' : ''}">
@@ -1397,6 +1265,7 @@ const firebaseConfig = {
       return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
     }
 
+    // Quest Reflection
     window.startQuest = function(questId, type) {
       const quest = type === 'weekly' ? weeklyQuest : dailyQuests.find(q => q.id === questId);
       currentQuest = quest;
@@ -1556,6 +1425,7 @@ const firebaseConfig = {
 
       appData.completedQuests.push(completion);
 
+      // Add to contacts
       if (needsPersonInfo && reflectionData.personName) {
         addOrUpdateContact(reflectionData.personName, reflectionData.personDetails || '', {
           date: new Date().toISOString(),
@@ -1565,12 +1435,14 @@ const firebaseConfig = {
         });
       }
 
+      // Add points and check for level up
       const oldLevel = appData.userProgress.level;
       appData.userProgress.points += currentQuest.points;
       const newLevel = Math.floor(appData.userProgress.points / appData.userProgress.pointsToNextLevel) + 1;
       
       if (newLevel > appData.userProgress.level) {
         appData.userProgress.level = newLevel;
+        // Set pending choice for new level
         if (gardenChoices[newLevel]) {
           appData.garden.pendingChoice = newLevel;
         }
@@ -1580,6 +1452,7 @@ const firebaseConfig = {
       closeModal();
       renderHome();
 
+      // Show garden choice if level up happened
       if (newLevel > oldLevel && gardenChoices[newLevel]) {
         switchView('garden');
       }
@@ -1605,109 +1478,12 @@ const firebaseConfig = {
       document.getElementById('reflectionModal').classList.remove('active');
     };
 
-    // Claude API Integration
-    window.saveApiKey = function() {
-      const apiKey = document.getElementById('apiKeyInput').value.trim();
-      if (apiKey && apiKey.startsWith('sk-ant-')) {
-        claudeApiKey = apiKey;
-        localStorage.setItem('claudeApiKey', apiKey);
-        document.getElementById('apiKeyNotice').style.display = 'none';
-        alert('API key saved! You can now get AI feedback on your interactions.');
-      } else {
-        alert('Please enter a valid Claude API key (starts with sk-ant-)');
-      }
-    };
-
-    async function getClaudeFeedback(entry) {
-      if (!claudeApiKey) {
-        alert('Please add your Claude API key in the Stats tab to get feedback');
-        return null;
-      }
-
-      const prompt = `I'm using an app to improve my social skills. I just had this interaction:
-
-Quest: ${entry.questTitle}
-${entry.personName ? `Person: ${entry.personName}` : ''}
-What happened: ${entry.whatHappened}
-My comfort level: ${likertLabels[entry.likertScale - 1]}
-${entry.feelings ? `Additional notes: ${entry.feelings}` : ''}
-
-Can you give me:
-1. Brief positive feedback (2-3 sentences)
-2. One actionable tip for next time (1-2 sentences)
-3. A conversation starter I could use if I see this person again (1 sentence)
-
-Keep it encouraging, practical, and concise.`;
-
-      try {
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-api-key': claudeApiKey,
-            'anthropic-version': '2023-06-01'
-          },
-          body: JSON.stringify({
-            model: 'claude-3-5-sonnet-20241022',
-            max_tokens: 500,
-            messages: [{
-              role: 'user',
-              content: prompt
-            }]
-          })
-        });
-
-        if (!response.ok) {
-          throw new Error('API request failed');
-        }
-
-        const data = await response.json();
-        return data.content[0].text;
-      } catch (error) {
-        console.error('Error getting Claude feedback:', error);
-        alert('Failed to get feedback. Please check your API key and try again.');
-        return null;
-      }
-    }
-
-    window.requestFeedback = async function(entryId) {
-      const entry = appData.completedQuests.find(q => q.id === entryId);
-      if (!entry) return;
-
-      const feedbackButton = event.currentTarget;
-      const feedbackContainer = feedbackButton.parentElement.querySelector('.feedback-container');
-      
-      if (!feedbackContainer) {
-        const container = document.createElement('div');
-        container.className = 'feedback-container';
-        feedbackButton.parentElement.appendChild(container);
-      }
-
-      const targetContainer = feedbackButton.parentElement.querySelector('.feedback-container');
-      
-      feedbackButton.disabled = true;
-      targetContainer.innerHTML = '<div class="feedback-loading">Getting AI feedback</div>';
-
-      const feedback = await getClaudeFeedback(entry);
-      
-      if (feedback) {
-        targetContainer.innerHTML = `
-          <div class="feedback-content">
-            <h4>🤖 AI Feedback</h4>
-            <p>${feedback}</p>
-          </div>
-        `;
-      } else {
-        targetContainer.innerHTML = '';
-      }
-      
-      feedbackButton.disabled = false;
-    };
-
+    // Garden View
     function renderGarden() {
       document.getElementById('gardenLevel').textContent = appData.userProgress.level;
       document.getElementById('gardenItemCount').textContent = appData.garden.items.length;
 
+      // Check for pending choice
       const pendingLevel = appData.garden.pendingChoice;
       if (pendingLevel && gardenChoices[pendingLevel]) {
         renderGardenChoice(pendingLevel);
@@ -1716,6 +1492,7 @@ Keep it encouraging, practical, and concise.`;
         document.getElementById('gardenChoicesContainer').innerHTML = '';
       }
 
+      // Render garden
       renderGardenCanvas();
     }
 
@@ -1768,6 +1545,7 @@ Keep it encouraging, practical, and concise.`;
       const canvas = document.getElementById('gardenCanvas');
       canvas.innerHTML = '';
 
+      // Add clouds
       for (let i = 0; i < 3; i++) {
         const cloud = document.createElement('div');
         cloud.className = 'garden-cloud';
@@ -1779,6 +1557,7 @@ Keep it encouraging, practical, and concise.`;
         canvas.appendChild(cloud);
       }
 
+      // Add grass blades for texture
       for (let i = 0; i < 30; i++) {
         const blade = document.createElement('div');
         blade.className = 'garden-grass-blade';
@@ -1809,21 +1588,26 @@ Keep it encouraging, practical, and concise.`;
         return;
       }
 
+      // Position items in garden with more natural placement
       appData.garden.items.forEach((item, index) => {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'garden-item';
         
+        // Calculate position based on type and index
         let left, bottom, size;
         
         if (item.type === 'structure') {
+          // Structures go in back/middle
           left = 20 + (index * 15) % 60;
           bottom = 40 + (index % 2) * 10;
           size = 72;
         } else if (item.type === 'decoration') {
+          // Decorations scattered around
           left = 10 + (index * 20) % 80;
           bottom = 20 + (index % 3) * 15;
           size = 56;
         } else {
+          // Plants in front rows
           left = 5 + (index * 12) % 90;
           bottom = 5 + (index % 4) * 12;
           size = 48;
@@ -1838,6 +1622,7 @@ Keep it encouraging, practical, and concise.`;
           <div class="garden-item-label">${item.name}</div>
         `;
         
+        // Add click effect
         itemDiv.onclick = () => {
           itemDiv.style.animation = 'none';
           setTimeout(() => {
@@ -1849,6 +1634,7 @@ Keep it encouraging, practical, and concise.`;
       });
     }
 
+    // Contacts View
     function renderContacts() {
       const container = document.getElementById('contactsContainer');
       
@@ -1889,6 +1675,7 @@ Keep it encouraging, practical, and concise.`;
       `).join('');
     }
 
+    // Journal View
     function renderJournal() {
       const container = document.getElementById('journalContainer');
       
@@ -1926,26 +1713,15 @@ Keep it encouraging, practical, and concise.`;
             <span style="color: #3b82f6; margin-left: 4px;">${likertLabels[entry.likertScale - 1]}</span>
           </div>
           ${entry.feelings ? `<p style="font-size: 12px; color: #9ca3af; margin-top: 8px; font-style: italic;">${entry.feelings}</p>` : ''}
-          <button class="feedback-button" onclick="requestFeedback('${entry.id}')">
-            <span>🤖</span> Get AI Feedback
-          </button>
-          <div class="feedback-container"></div>
         </div>
       `).join('');
     }
 
+    // Stats View
     function renderStats() {
       const avgComfort = appData.completedQuests.length > 0
         ? (appData.completedQuests.reduce((sum, q) => sum + q.likertScale, 0) / appData.completedQuests.length).toFixed(1)
         : '0.0';
-
-      // Show API key notice if not set
-      const apiKeyNotice = document.getElementById('apiKeyNotice');
-      if (!claudeApiKey) {
-        apiKeyNotice.style.display = 'block';
-      } else {
-        apiKeyNotice.style.display = 'none';
-      }
 
       document.getElementById('statsGrid').innerHTML = `
         <div class="stat-card blue">
@@ -1980,16 +1756,4 @@ Keep it encouraging, practical, and concise.`;
     }
   </script>
 </body>
-</html> active" onclick="switchView('home')">
-        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-        </svg>
-        <span>Quests</span>
-      </div>
-      <div class="nav-item" onclick="switchView('garden')">
-        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-        </svg>
-        <span>Garden</span>
-      </div>
-      <div class="nav-item
+</html>
