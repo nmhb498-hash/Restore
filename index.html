@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restore - Social Quest App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(to bottom, #f9fafb, #ffffff);
+      min-height: 100vh;
+      padding-bottom: 80px;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .header h1 {
+      background: linear-gradient(to right, #3b82f6, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .level-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(to bottom right, #3b82f6, #8b5cf6);
+      border-radius: 50%;
+      color: white;
+      font-weight: bold;
+      float: right;
+    }
+
+    .auth-container {
+      max-width: 400px;
+      margin: 100px auto;
+      padding: 40px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .auth-container h2 {
+      margin-bottom: 24px;
+      background: linear-gradient(to right, #3b82f6, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .progress-bar-container {
+      margin: 20px 0;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .progress-bar {
+      height: 12px;
+      background: #e5e7eb;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, #3b82f6, #8b5cf6);
+      transition: width 0.5s ease;
+    }
+
+    .daily-progress {
+      background: linear-gradient(to right, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      margin-bottom: 20px;
+    }
+
+    .daily-progress h3 {
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .daily-progress p {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .quest-section {
+      margin-bottom: 30px;
+    }
+
+    .quest-section h3 {
+      font-size: 18px;
+      margin-bottom: 12px;
+    }
+
+    .quest-card {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      border: 2px solid #e5e7eb;
+      margin-bottom: 12px;
+      transition: border-color 0.2s;
+    }
+
+    .quest-card:hover {
+      border-color: #3b82f6;
+    }
+
+    .quest-card.completed {
+      border-color: #10b981;
+      background: rgba(16, 185, 129, 0.05);
+    }
+
+    .quest-card.weekly {
+      border-color: #8b5cf6;
+    }
+
+    .quest-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .quest-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #d1d5db;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .quest-icon.completed {
+      border-color: #10b981;
+      background: #10b981;
+      position: relative;
+    }
+
+    .quest-icon.completed::after {
+      content: '✓';
+      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 14px;
+    }
+
+    .quest-content {
+      flex: 1;
+    }
+
+    .quest-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .quest-description {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .quest-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .quest-points {
+      font-size: 12px;
+      font-weight: 600;
+      color: #3b82f6;
+    }
+
+    .quest-card.weekly .quest-points {
+      color: #8b5cf6;
+    }
+
+    .quest-completed-count {
+      font-size: 12px;
+      color: #10b981;
+      font-weight: 500;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(to right, #3b82f6, #8b5cf6);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-text {
+      background: none;
+      color: #3b82f6;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 500px;
+      width: 100%;
+      margin-top: 40px;
+      max-height: calc(100vh - 80px);
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+
+    .modal-header p {
+      color: #6b7280;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .input-with-mic {
+      position: relative;
+    }
+
+    .mic-button {
+      position: absolute;
+      right: 8px;
+      top: 8px;
+      background: #f3f4f6;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .mic-button:hover {
+      background: #e5e7eb;
+    }
+
+    .mic-button.recording {
+      background: #ef4444;
+      color: white;
+    }
+
+    .likert-scale {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .likert-option {
+      padding: 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .likert-option:hover {
+      border-color: #d1d5db;
+    }
+
+    .likert-option.selected {
+      border-color: #3b82f6;
+      background: rgba(59, 130, 246, 0.05);
+    }
+
+    .likert-radio {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #d1d5db;
+      border-radius: 50%;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .likert-option.selected .likert-radio {
+      border-color: #3b82f6;
+    }
+
+    .likert-option.selected .likert-radio::after {
+      content: '';
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #3b82f6;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .modal-footer .btn {
+      flex: 1;
+      padding: 14px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: #9ca3af;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .nav-item.active {
+      color: #3b82f6;
+    }
+
+    .nav-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .view {
+      display: none;
+    }
+
+    .view.active {
+      display: block;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #9ca3af;
+    }
+
+    .empty-state-icon {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 16px;
+      opacity: 0.3;
+    }
+
+    .contact-card,
+    .journal-entry,
+    .stat-card {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 12px;
+    }
+
+    .contact-name {
+      font-weight: 600;
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .contact-details {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .interaction-count {
+      font-size: 12px;
+      color: #3b82f6;
+      font-weight: 500;
+    }
+
+    .interaction {
+      background: #f9fafb;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 12px;
+    }
+
+    .interaction-date {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-bottom: 8px;
+    }
+
+    .next-discussion {
+      background: rgba(59, 130, 246, 0.1);
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 8px;
+    }
+
+    .next-discussion-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #3b82f6;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .next-discussion-text {
+      font-size: 14px;
+      color: #1e40af;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .stat-card.blue {
+      background: linear-gradient(to bottom right, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
+      border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .stat-card.purple {
+      background: linear-gradient(to bottom right, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
+      border-color: rgba(139, 92, 246, 0.2);
+    }
+
+    .stat-card.green {
+      background: linear-gradient(to bottom right, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.05));
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .stat-card.orange {
+      background: linear-gradient(to bottom right, rgba(251, 146, 60, 0.1), rgba(251, 146, 60, 0.05));
+      border-color: rgba(251, 146, 60, 0.2);
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: bold;
+      margin: 8px 0;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .garden-container {
+      background: 
+        linear-gradient(to bottom, 
+          #87CEEB 0%, 
+          #B0E0E6 30%,
+          #98D8C8 50%, 
+          #7BA05B 50%,
+          #6B8E4E 75%,
+          #5A7A42 100%
+        );
+      border-radius: 16px;
+      padding: 0;
+      min-height: 500px;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: inset 0 -20px 40px rgba(0,0,0,0.1);
+    }
+
+    .garden-sky {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 40%;
+      background: linear-gradient(to bottom, #87CEEB, #B0E0E6);
+      z-index: 1;
+    }
+
+    .garden-sun {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle, #FFD700, #FFA500);
+      border-radius: 50%;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+      z-index: 2;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .garden-cloud {
+      position: absolute;
+      background: white;
+      border-radius: 50px;
+      opacity: 0.8;
+      animation: drift 20s linear infinite;
+      z-index: 2;
+    }
+
+    @keyframes drift {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(calc(100vw + 100px)); }
+    }
+
+    .garden-ground {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60%;
+      background: 
+        linear-gradient(to bottom,
+          #7BA05B 0%,
+          #6B8E4E 50%,
+          #5A7A42 100%
+        );
+      z-index: 1;
+    }
+
+    .garden-ground::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 20px;
+      background: repeating-linear-gradient(
+        90deg,
+        #6B8E4E 0px,
+        #7BA05B 2px,
+        #6B8E4E 4px
+      );
+      opacity: 0.3;
+    }
+
+    .garden-canvas {
+      width: 100%;
+      height: 500px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .garden-item {
+      position: absolute;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      animation: growIn 0.8s ease;
+      cursor: pointer;
+      filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
+    }
+
+    .garden-item:hover {
+      transform: scale(1.15) translateY(-5px);
+      filter: drop-shadow(3px 6px 10px rgba(0,0,0,0.4));
+    }
+
+    @keyframes growIn {
+      0% {
+        opacity: 0;
+        transform: scale(0) translateY(20px);
+      }
+      60% {
+        transform: scale(1.1) translateY(-5px);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    .garden-grass-blade {
+      position: absolute;
+      width: 3px;
+      height: 20px;
+      background: linear-gradient(to top, #5A7A42, #7BA05B);
+      border-radius: 50% 50% 0 0;
+      opacity: 0.4;
+      animation: sway 3s ease-in-out infinite;
+    }
+
+    @keyframes sway {
+      0%, 100% { transform: rotate(-2deg); }
+      50% { transform: rotate(2deg); }
+    }
+
+    .garden-item-label {
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    .garden-item:hover .garden-item-label {
+      opacity: 1;
+    }
+
+    .garden-info {
+      background: white;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .garden-info h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .garden-info p {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .choice-card {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      border: 3px solid #e5e7eb;
+      margin-bottom: 16px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .choice-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .choice-card:hover::before {
+      left: 100%;
+    }
+
+    .choice-card:hover {
+      border-color: #3b82f6;
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
+    }
+
+    .choice-card:active {
+      transform: translateY(-4px) scale(0.98);
+    }
+
+    .choice-emoji {
+      font-size: 64px;
+      margin-bottom: 12px;
+      display: inline-block;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .choice-card:hover .choice-emoji {
+      animation: spin 0.6s ease;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.2); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    .choice-card h4 {
+      font-size: 20px;
+      margin-bottom: 8px;
+      color: #1f2937;
+    }
+
+    .choice-card p {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.5;
+    }
+
+    .choice-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .level-up-banner {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 16px;
+      text-align: center;
+      margin-bottom: 20px;
+      animation: slideDown 0.5s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .level-up-banner h2 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    #authView {
+      display: block;
+    }
+
+    #appContainer {
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Auth View -->
+  <div id="authView">
+    <div class="auth-container">
+      <h2>🌱 Welcome to Restore</h2>
+      <p style="margin-bottom: 24px; color: #6b7280;">Sign in to start growing your social garden</p>
+      <button class="btn btn-primary" style="width: 100%; padding: 14px; margin-bottom: 12px;" onclick="signInWithGoogle()">
+        Sign in with Google
+      </button>
+      <button class="btn btn-primary" style="width: 100%; padding: 14px;" onclick="signInAnonymously()">
+        Continue as Guest
+      </button>
+    </div>
+  </div>
+
+  <!-- App Container -->
+  <div id="appContainer">
+    <div class="container">
+      <div class="header">
+        <div class="level-badge" id="levelBadge">1</div>
+        <h1>Restore</h1>
+        <button class="btn btn-text" onclick="signOut()" style="float: right; margin-top: -40px;">Sign Out</button>
+      </div>
+
+      <!-- Home View -->
+      <div id="homeView" class="view active">
+        <div class="progress-bar-container">
+          <div class="progress-info">
+            <span>⭐ Level <span id="currentLevel">1</span></span>
+            <span><span id="currentXP">0</span>/<span id="neededXP">100</span> XP</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div class="daily-progress">
+          <h3>Daily Progress</h3>
+          <p id="dailyProgressText">0 quests completed today</p>
+          <p id="weeklyProgressText">Weekly quest available</p>
+        </div>
+
+        <div class="quest-section">
+          <h3>Daily Quests</h3>
+          <div id="dailyQuestsContainer"></div>
+        </div>
+
+        <div class="quest-section">
+          <h3>Weekly Quest</h3>
+          <div id="weeklyQuestContainer"></div>
+        </div>
+      </div>
+
+      <!-- Garden View -->
+      <div id="gardenView" class="view">
+        <div id="levelUpNotification"></div>
+        
+        <div class="garden-info">
+          <h3>🌱 Your Social Garden</h3>
+          <p>Level <span id="gardenLevel">1</span> • <span id="gardenItemCount">0</span> items planted</p>
+        </div>
+
+        <div class="garden-container">
+          <div class="garden-sky"></div>
+          <div class="garden-sun"></div>
+          <div class="garden-ground"></div>
+          <div class="garden-canvas" id="gardenCanvas"></div>
+        </div>
+
+        <div id="gardenChoicesContainer"></div>
+      </div>
+
+      <!-- Contacts View -->
+      <div id="contactsView" class="view">
+        <h2 style="margin-bottom: 20px;">Your Contacts</h2>
+        <div id="contactsContainer"></div>
+      </div>
+
+      <!-- Journal View -->
+      <div id="journalView" class="view">
+        <h2 style="margin-bottom: 20px;">Your Journal</h2>
+        <div id="journalContainer"></div>
+      </div>
+
+      <!-- Stats View -->
+      <div id="statsView" class="view">
+        <h2 style="margin-bottom: 20px;">Your Progress</h2>
+        <div class="stats-grid" id="statsGrid"></div>
+        <div id="avgComfortCard"></div>
+      </div>
+    </div>
+
+    <!-- Reflection Modal -->
+    <div id="reflectionModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Quest Complete!</h2>
+          <p id="modalQuestTitle"></p>
+        </div>
+        
+        <div id="modalForm"></div>
+
+        <div class="modal-footer">
+          <button class="btn" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveReflection()" id="saveButton">Save & Earn XP</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+      <div class="nav-item" onclick="switchView('contacts')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        <span>Contacts</span>
+      </div>
+      <div class="nav-item" onclick="switchView('journal')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+        </svg>
+        <span>Journal</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signInAnonymously as firebaseSignInAnonymously, onAuthStateChanged, signOut as firebaseSignOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getDatabase, ref, set, get } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+
+    // Firebase configuration - REPLACE WITH YOUR CONFIG
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+
+    // Global variables
+    let currentUser = null;
+    let appData = {
+      userProgress: { level: 1, points: 0, pointsToNextLevel: 100 },
+      completedQuests: [],
+      contacts: [],
+      garden: { items: [], pendingChoice: null, choicesMade: [] }
+    };
+
+    let currentQuest = null;
+    let reflectionData = {};
+
+    const dailyQuests = [
+      { id: 'meet-new', title: 'Meet someone new', description: 'Start a conversation with a person you haven\'t met before', points: 50, type: 'daily' },
+      { id: 'reconnect', title: 'Reconnect with someone', description: 'Reach out to someone you haven\'t talked to in a while', points: 50, type: 'daily' }
+    ];
+
+    const weeklyQuest = { id: 'weekly-1', title: 'Plan a dinner for 2 or more people', description: 'Organize and host a meal with friends or family', points: 150, type: 'weekly' };
+
+    const likertLabels = ['Very Uncomfortable', 'Uncomfortable', 'Neutral', 'Comfortable', 'Very Comfortable'];
+
+    const gardenChoices = {
+      1: [
+        { id: 'carrots', name: 'Plant Carrots', description: 'Grow orange carrots in your garden', emoji: '🥕', type: 'plant' },
+        { id: 'tomatoes', name: 'Plant Tomatoes', description: 'Add fresh red tomatoes', emoji: '🍅', type: 'plant' }
+      ],
+      2: [
+        { id: 'scarecrow', name: 'Add a Scarecrow', description: 'Protect your plants from birds', emoji: '🧑‍🌾', type: 'decoration' },
+        { id: 'fence', name: 'Build a Fence', description: 'Add a wooden fence around your garden', emoji: '🪵', type: 'structure' }
+      ],
+      3: [
+        { id: 'sunflowers', name: 'Plant Sunflowers', description: 'Tall, bright sunflowers', emoji: '🌻', type: 'plant' },
+        { id: 'roses', name: 'Plant Roses', description: 'Beautiful red roses', emoji: '🌹', type: 'plant' }
+      ],
+      4: [
+        { id: 'bench', name: 'Add a Bench', description: 'A place to rest and reflect', emoji: '🪑', type: 'decoration' },
+        { id: 'fountain', name: 'Build a Fountain', description: 'A peaceful water feature', emoji: '⛲', type: 'structure' }
+      ],
+      5: [
+        { id: 'apple-tree', name: 'Plant Apple Tree', description: 'A tree that bears fruit', emoji: '🍎', type: 'plant' },
+        { id: 'butterfly-garden', name: 'Butterfly Garden', description: 'Attract colorful butterflies', emoji: '🦋', type: 'decoration' }
+      ],
+      6: [
+        { id: 'herb-garden', name: 'Herb Garden', description: 'Grow fresh herbs', emoji: '🌿', type: 'plant' },
+        { id: 'birdhouse', name: 'Add Birdhouse', description: 'Welcome friendly birds', emoji: '🏠', type: 'decoration' }
+      ],
+      7: [
+        { id: 'pumpkins', name: 'Plant Pumpkins', description: 'Large orange pumpkins', emoji: '🎃', type: 'plant' },
+        { id: 'garden-gnome', name: 'Garden Gnome', description: 'A cheerful garden guardian', emoji: '🧙', type: 'decoration' }
+      ],
+      8: [
+        { id: 'greenhouse', name: 'Build Greenhouse', description: 'Grow plants year-round', emoji: '🏡', type: 'structure' },
+        { id: 'pond', name: 'Add a Pond', description: 'A tranquil water garden', emoji: '🐟', type: 'structure' }
+      ],
+      9: [
+        { id: 'lavender', name: 'Plant Lavender', description: 'Fragrant purple flowers', emoji: '💜', type: 'plant' },
+        { id: 'stone-path', name: 'Stone Pathway', description: 'A winding garden path', emoji: '🪨', type: 'structure' }
+      ],
+      10: [
+        { id: 'gazebo', name: 'Build Gazebo', description: 'A covered gathering space', emoji: '⛺', type: 'structure' },
+        { id: 'rainbow-flowers', name: 'Rainbow Garden', description: 'A burst of colorful flowers', emoji: '🌈', type: 'plant' }
+      ]
+    };
+
+    // Auth functions
+    window.signInWithGoogle = async function() {
+      const provider = new GoogleAuthProvider();
+      try {
+        await signInWithPopup(auth, provider);
+      } catch (error) {
+        console.error('Error signing in:', error);
+        alert('Failed to sign in with Google');
+      }
+    };
+
+    window.signInAnonymously = async function() {
+      try {
+        await firebaseSignInAnonymously(auth);
+      } catch (error) {
+        console.error('Error signing in:', error);
+        alert('Failed to sign in');
+      }
+    };
+
+    window.signOut = async function() {
+      try {
+        await firebaseSignOut(auth);
+        document.getElementById('authView').style.display = 'block';
+        document.getElementById('appContainer').style.display = 'none';
+      } catch (error) {
+        console.error('Error signing out:', error);
+      }
+    };
+
+    // Auth state observer
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentUser = user;
+        document.getElementById('authView').style.display = 'none';
+        document.getElementById('appContainer').style.display = 'block';
+        await loadUserData();
+        renderHome();
+        renderGarden();
+      } else {
+        currentUser = null;
+        document.getElementById('authView').style.display = 'block';
+        document.getElementById('appContainer').style.display = 'none';
+      }
+    });
+
+    // Firebase data functions
+    async function loadUserData() {
+      if (!currentUser) return;
+      
+      const userRef = ref(database, 'users/' + currentUser.uid);
+      const snapshot = await get(userRef);
+      
+      if (snapshot.exists()) {
+        appData = snapshot.val();
+        if (!appData.garden) {
+          appData.garden = { items: [], pendingChoice: null, choicesMade: [] };
+        }
+      } else {
+        await saveUserData();
+      }
+    }
+
+    async function saveUserData() {
+      if (!currentUser) return;
+      const userRef = ref(database, 'users/' + currentUser.uid);
+      await set(userRef, appData);
+    }
+
+    // Navigation
+    window.switchView = function(viewName) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      
+      document.getElementById(viewName + 'View').classList.add('active');
+      event.currentTarget.classList.add('active');
+
+      if (viewName === 'garden') renderGarden();
+      if (viewName === 'contacts') renderContacts();
+      if (viewName === 'journal') renderJournal();
+      if (viewName === 'stats') renderStats();
+    };
+
+    // Render functions
+    function renderHome() {
+      const { level, points, pointsToNextLevel } = appData.userProgress;
+      const progress = ((points % pointsToNextLevel) / pointsToNextLevel) * 100;
+
+      document.getElementById('levelBadge').textContent = level;
+      document.getElementById('currentLevel').textContent = level;
+      document.getElementById('currentXP').textContent = points % pointsToNextLevel;
+      document.getElementById('neededXP').textContent = pointsToNextLevel;
+      document.getElementById('progressFill').style.width = progress + '%';
+
+      const today = new Date().toDateString();
+      const completedToday = appData.completedQuests.filter(q => new Date(q.date).toDateString() === today).length;
+      document.getElementById('dailyProgressText').textContent = `${completedToday} quests completed today`;
+
+      const weeklyCompleted = isWeeklyQuestCompleted();
+      document.getElementById('weeklyProgressText').textContent = weeklyCompleted ? '✓ Weekly quest complete!' : 'Weekly quest available';
+
+      const dailyContainer = document.getElementById('dailyQuestsContainer');
+      dailyContainer.innerHTML = dailyQuests.map(quest => {
+        const completedCount = appData.completedQuests.filter(
+          c => c.questId === quest.id && new Date(c.date).toDateString() === today
+        ).length;
+
+        return `
+          <div class="quest-card">
+            <div class="quest-header">
+              <div class="quest-icon"></div>
+              <div class="quest-content">
+                <div class="quest-title">${quest.title}</div>
+                <div class="quest-description">${quest.description}</div>
+                <div class="quest-footer">
+                  <span class="quest-points">+${quest.points} XP</span>
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    ${completedCount > 0 ? `<span class="quest-completed-count">Completed ${completedCount}x today</span>` : ''}
+                    <button class="btn btn-text" onclick="startQuest('${quest.id}', 'daily')">Complete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const weeklyContainer = document.getElementById('weeklyQuestContainer');
+      weeklyContainer.innerHTML = `
+        <div class="quest-card weekly ${weeklyCompleted ? 'completed' : ''}">
+          <div class="quest-header">
+            <div class="quest-icon ${weeklyCompleted ? 'completed' : ''}"></div>
+            <div class="quest-content">
+              <div class="quest-title">${weeklyQuest.title}</div>
+              <div class="quest-description">${weeklyQuest.description}</div>
+              <div class="quest-footer">
+                <span class="quest-points">+${weeklyQuest.points} XP</span>
+                ${!weeklyCompleted ? `<button class="btn btn-text" onclick="startQuest('${weeklyQuest.id}', 'weekly')">Complete</button>` : ''}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function isWeeklyQuestCompleted() {
+      const now = new Date();
+      const currentWeek = getWeekNumber(now);
+      const currentYear = now.getFullYear();
+
+      return appData.completedQuests.some(q => {
+        const qDate = new Date(q.date);
+        return q.questId === weeklyQuest.id &&
+               getWeekNumber(qDate) === currentWeek &&
+               qDate.getFullYear() === currentYear;
+      });
+    }
+
+    function getWeekNumber(date) {
+      const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+      const dayNum = d.getUTCDay() || 7;
+      d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+      return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    }
+
+    window.startQuest = function(questId, type) {
+      const quest = type === 'weekly' ? weeklyQuest : dailyQuests.find(q => q.id === questId);
+      currentQuest = quest;
+      reflectionData = {
+        likertScale: 3,
+        personName: '',
+        personDetails: '',
+        whatHappened: '',
+        nextDiscussion: '',
+        feelings: ''
+      };
+
+      document.getElementById('modalQuestTitle').textContent = quest.title;
+      
+      const needsPersonInfo = quest.id === 'meet-new' || quest.id === 'reconnect';
+      
+      let formHTML = '';
+
+      if (needsPersonInfo) {
+        formHTML += `
+          <div class="form-group">
+            <label>${quest.id === 'meet-new' ? "What's their name?" : "Who did you reconnect with?"}</label>
+            <input type="text" id="personName" placeholder="Enter name..." oninput="updateReflectionData('personName', this.value)">
+          </div>
+        `;
+
+        if (quest.id === 'meet-new') {
+          formHTML += `
+            <div class="form-group">
+              <label>Tell us about them</label>
+              <div class="input-with-mic">
+                <textarea id="personDetails" placeholder="Interests, background, how you met..." oninput="updateReflectionData('personDetails', this.value)"></textarea>
+                <button class="mic-button" onclick="startVoiceInput('personDetails')">🎤</button>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      formHTML += `
+        <div class="form-group">
+          <label>What happened?</label>
+          <div class="input-with-mic">
+            <textarea id="whatHappened" placeholder="Describe your experience..." oninput="updateReflectionData('whatHappened', this.value)" required></textarea>
+            <button class="mic-button" onclick="startVoiceInput('whatHappened')">🎤</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>How did you feel about the interaction?</label>
+          <div class="likert-scale">
+            ${likertLabels.map((label, index) => `
+              <div class="likert-option ${index === 2 ? 'selected' : ''}" onclick="selectLikert(${index + 1})">
+                <div class="likert-radio"></div>
+                <span>${label}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      if (needsPersonInfo) {
+        formHTML += `
+          <div class="form-group">
+            <label>What would be something to discuss the next time you see this person?</label>
+            <div class="input-with-mic">
+              <textarea id="nextDiscussion" placeholder="Topics, questions, or things to follow up on..." oninput="updateReflectionData('nextDiscussion', this.value)"></textarea>
+              <button class="mic-button" onclick="startVoiceInput('nextDiscussion')">🎤</button>
+            </div>
+          </div>
+        `;
+      }
+
+      formHTML += `
+        <div class="form-group">
+          <label>Any additional thoughts or feelings? (optional)</label>
+          <div class="input-with-mic">
+            <textarea id="feelings" placeholder="Optional notes..." oninput="updateReflectionData('feelings', this.value)"></textarea>
+            <button class="mic-button" onclick="startVoiceInput('feelings')">🎤</button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('modalForm').innerHTML = formHTML;
+      document.getElementById('saveButton').textContent = `Save & Earn ${quest.points} XP`;
+      document.getElementById('reflectionModal').classList.add('active');
+    };
+
+    window.updateReflectionData = function(field, value) {
+      reflectionData[field] = value;
+    };
+
+    window.selectLikert = function(value) {
+      reflectionData.likertScale = value;
+      document.querySelectorAll('.likert-option').forEach((option, index) => {
+        option.classList.toggle('selected', index === value - 1);
+      });
+    };
+
+    window.startVoiceInput = function(fieldId) {
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        alert('Voice input is not supported in your browser');
+        return;
+      }
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      const button = event.currentTarget;
+      const textarea = document.getElementById(fieldId);
+
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onstart = () => {
+        button.classList.add('recording');
+        button.textContent = '🔴';
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        textarea.value += (textarea.value ? ' ' : '') + transcript;
+        reflectionData[fieldId] = textarea.value;
+      };
+
+      recognition.onerror = () => {
+        button.classList.remove('recording');
+        button.textContent = '🎤';
+      };
+
+      recognition.onend = () => {
+        button.classList.remove('recording');
+        button.textContent = '🎤';
+      };
+
+      recognition.start();
+    };
+
+    window.saveReflection = async function() {
+      if (!reflectionData.whatHappened) {
+        alert('Please describe what happened');
+        return;
+      }
+
+      const needsPersonInfo = currentQuest.id === 'meet-new' || currentQuest.id === 'reconnect';
+      if (needsPersonInfo && !reflectionData.personName) {
+        alert('Please enter the person\'s name');
+        return;
+      }
+
+      const completion = {
+        id: Date.now().toString(),
+        questId: currentQuest.id,
+        questTitle: currentQuest.title,
+        date: new Date().toISOString(),
+        ...reflectionData
+      };
+
+      appData.completedQuests.push(completion);
+
+      if (needsPersonInfo && reflectionData.personName) {
+        addOrUpdateContact(reflectionData.personName, reflectionData.personDetails || '', {
+          date: new Date().toISOString(),
+          notes: reflectionData.whatHappened,
+          nextDiscussion: reflectionData.nextDiscussion,
+          comfortLevel: reflectionData.likertScale
+        });
+      }
+
+      const oldLevel = appData.userProgress.level;
+      appData.userProgress.points += currentQuest.points;
+      const newLevel = Math.floor(appData.userProgress.points / appData.userProgress.pointsToNextLevel) + 1;
+      
+      if (newLevel > appData.userProgress.level) {
+        appData.userProgress.level = newLevel;
+        if (gardenChoices[newLevel]) {
+          appData.garden.pendingChoice = newLevel;
+        }
+      }
+
+      await saveUserData();
+      closeModal();
+      renderHome();
+
+      if (newLevel > oldLevel && gardenChoices[newLevel]) {
+        switchView('garden');
+      }
+    };
+
+    function addOrUpdateContact(name, details, interaction) {
+      const existingIndex = appData.contacts.findIndex(c => c.name.toLowerCase() === name.toLowerCase());
+      
+      if (existingIndex >= 0) {
+        appData.contacts[existingIndex].interactions.push(interaction);
+      } else {
+        appData.contacts.push({
+          id: Date.now().toString(),
+          name: name,
+          details: details,
+          dateAdded: new Date().toISOString(),
+          interactions: [interaction]
+        });
+      }
+    }
+
+    window.closeModal = function() {
+      document.getElementById('reflectionModal').classList.remove('active');
+    };
+
+    function renderGarden() {
+      document.getElementById('gardenLevel').textContent = appData.userProgress.level;
+      document.getElementById('gardenItemCount').textContent = appData.garden.items.length;
+
+      const pendingLevel = appData.garden.pendingChoice;
+      if (pendingLevel && gardenChoices[pendingLevel]) {
+        renderGardenChoice(pendingLevel);
+      } else {
+        document.getElementById('levelUpNotification').innerHTML = '';
+        document.getElementById('gardenChoicesContainer').innerHTML = '';
+      }
+
+      renderGardenCanvas();
+    }
+
+    function renderGardenChoice(level) {
+      const choices = gardenChoices[level];
+      
+      document.getElementById('levelUpNotification').innerHTML = `
+        <div class="level-up-banner">
+          <h2>🎉 Level ${level} Unlocked!</h2>
+          <p>Choose an addition to your social garden</p>
+        </div>
+      `;
+
+      document.getElementById('gardenChoicesContainer').innerHTML = `
+        <h3 style="margin-bottom: 16px; font-size: 18px;">Choose Your Garden Addition:</h3>
+        ${choices.map(choice => `
+          <div class="choice-card" onclick="makeGardenChoice('${choice.id}', ${level})">
+            <span class="choice-badge">${choice.type}</span>
+            <div class="choice-emoji">${choice.emoji}</div>
+            <h4>${choice.name}</h4>
+            <p>${choice.description}</p>
+          </div>
+        `).join('')}
+      `;
+    }
+
+    window.makeGardenChoice = async function(choiceId, level) {
+      const choices = gardenChoices[level];
+      const choice = choices.find(c => c.id === choiceId);
+      
+      if (choice) {
+        appData.garden.items.push({
+          ...choice,
+          level: level,
+          addedAt: new Date().toISOString()
+        });
+        appData.garden.choicesMade.push({
+          level: level,
+          choiceId: choiceId,
+          date: new Date().toISOString()
+        });
+        appData.garden.pendingChoice = null;
+        
+        await saveUserData();
+        renderGarden();
+      }
+    };
+
+    function renderGardenCanvas() {
+      const canvas = document.getElementById('gardenCanvas');
+      canvas.innerHTML = '';
+
+      for (let i = 0; i < 3; i++) {
+        const cloud = document.createElement('div');
+        cloud.className = 'garden-cloud';
+        cloud.style.width = (60 + Math.random() * 40) + 'px';
+        cloud.style.height = (30 + Math.random() * 20) + 'px';
+        cloud.style.top = (10 + i * 15) + '%';
+        cloud.style.left = (i * 30) + '%';
+        cloud.style.animationDelay = (i * 5) + 's';
+        canvas.appendChild(cloud);
+      }
+
+      for (let i = 0; i < 30; i++) {
+        const blade = document.createElement('div');
+        blade.className = 'garden-grass-blade';
+        blade.style.left = Math.random() * 100 + '%';
+        blade.style.bottom = Math.random() * 40 + '%';
+        blade.style.animationDelay = Math.random() * 3 + 's';
+        canvas.appendChild(blade);
+      }
+
+      if (appData.garden.items.length === 0) {
+        const emptyState = document.createElement('div');
+        emptyState.style.cssText = `
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          text-align: center;
+          color: rgba(255, 255, 255, 0.9);
+          z-index: 10;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        `;
+        emptyState.innerHTML = `
+          <div style="font-size: 64px; margin-bottom: 16px;">🌱</div>
+          <p style="font-size: 18px; font-weight: 600;">Your garden awaits</p>
+          <p style="font-size: 14px; margin-top: 8px; opacity: 0.9;">Complete quests to level up and plant your first item!</p>
+        `;
+        canvas.appendChild(emptyState);
+        return;
+      }
+
+      appData.garden.items.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'garden-item';
+        
+        let left, bottom, size;
+        
+        if (item.type === 'structure') {
+          left = 20 + (index * 15) % 60;
+          bottom = 40 + (index % 2) * 10;
+          size = 72;
+        } else if (item.type === 'decoration') {
+          left = 10 + (index * 20) % 80;
+          bottom = 20 + (index % 3) * 15;
+          size = 56;
+        } else {
+          left = 5 + (index * 12) % 90;
+          bottom = 5 + (index % 4) * 12;
+          size = 48;
+        }
+
+        itemDiv.style.left = left + '%';
+        itemDiv.style.bottom = bottom + '%';
+        itemDiv.style.fontSize = size + 'px';
+        itemDiv.style.zIndex = Math.floor(100 - bottom);
+        itemDiv.innerHTML = `
+          ${item.emoji}
+          <div class="garden-item-label">${item.name}</div>
+        `;
+        
+        itemDiv.onclick = () => {
+          itemDiv.style.animation = 'none';
+          setTimeout(() => {
+            itemDiv.style.animation = 'growIn 0.8s ease';
+          }, 10);
+        };
+        
+        canvas.appendChild(itemDiv);
+      });
+    }
+
+    function renderContacts() {
+      const container = document.getElementById('contactsContainer');
+      
+      if (appData.contacts.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+            <h3>No contacts yet</h3>
+            <p>Complete "Meet someone new" to add people!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = appData.contacts.map(contact => `
+        <div class="contact-card">
+          <div class="contact-name">${contact.name}</div>
+          ${contact.details ? `<div class="contact-details">${contact.details}</div>` : ''}
+          <div class="interaction-count">${contact.interactions.length} interaction${contact.interactions.length !== 1 ? 's' : ''}</div>
+          ${contact.interactions.slice(-3).reverse().map(interaction => `
+            <div class="interaction">
+              <div class="interaction-date">${new Date(interaction.date).toLocaleDateString()}</div>
+              <p>${interaction.notes}</p>
+              ${interaction.nextDiscussion ? `
+                <div class="next-discussion">
+                  <div class="next-discussion-label">Next time:</div>
+                  <div class="next-discussion-text">${interaction.nextDiscussion}</div>
+                </div>
+              ` : ''}
+              <div style="margin-top: 8px; font-size: 12px; color: #6b7280;">
+                Comfort: <span style="color: #3b82f6;">${likertLabels[interaction.comfortLevel - 1]}</span>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `).join('');
+    }
+
+    function renderJournal() {
+      const container = document.getElementById('journalContainer');
+      
+      if (appData.completedQuests.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <svg class="empty-state-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            <h3>No entries yet</h3>
+            <p>Complete a quest to get started!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = [...appData.completedQuests].reverse().map(entry => `
+        <div class="journal-entry">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+            <div>
+              <div style="font-weight: 600; margin-bottom: 4px;">${entry.questTitle}</div>
+              ${entry.personName ? `<div style="color: #3b82f6; font-size: 14px;">${entry.personName}</div>` : ''}
+            </div>
+            <div style="font-size: 12px; color: #9ca3af;">${new Date(entry.date).toLocaleDateString()}</div>
+          </div>
+          <p style="color: #6b7280; font-size: 14px; margin-bottom: 8px;">${entry.whatHappened}</p>
+          ${entry.nextDiscussion ? `
+            <div class="next-discussion">
+              <div class="next-discussion-label">Next discussion topic:</div>
+              <div class="next-discussion-text">${entry.nextDiscussion}</div>
+            </div>
+          ` : ''}
+          <div style="font-size: 12px; margin-top: 8px;">
+            <span style="color: #9ca3af;">Comfort Level:</span>
+            <span style="color: #3b82f6; margin-left: 4px;">${likertLabels[entry.likertScale - 1]}</span>
+          </div>
+          ${entry.feelings ? `<p style="font-size: 12px; color: #9ca3af; margin-top: 8px; font-style: italic;">${entry.feelings}</p>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function renderStats() {
+      const avgComfort = appData.completedQuests.length > 0
+        ? (appData.completedQuests.reduce((sum, q) => sum + q.likertScale, 0) / appData.completedQuests.length).toFixed(1)
+        : '0.0';
+
+      document.getElementById('statsGrid').innerHTML = `
+        <div class="stat-card blue">
+          <div style="font-size: 32px; margin-bottom: 8px;">🏆</div>
+          <div class="stat-value">${appData.userProgress.level}</div>
+          <div class="stat-label">Current Level</div>
+        </div>
+        <div class="stat-card purple">
+          <div style="font-size: 32px; margin-bottom: 8px;">⭐</div>
+          <div class="stat-value">${appData.userProgress.points}</div>
+          <div class="stat-label">Total XP</div>
+        </div>
+        <div class="stat-card green">
+          <div style="font-size: 32px; margin-bottom: 8px;">✅</div>
+          <div class="stat-value">${appData.completedQuests.length}</div>
+          <div class="stat-label">Quests Done</div>
+        </div>
+        <div class="stat-card orange">
+          <div style="font-size: 32px; margin-bottom: 8px;">👥</div>
+          <div class="stat-value">${appData.contacts.length}</div>
+          <div class="stat-label">Contacts</div>
+        </div>
+      `;
+
+      document.getElementById('avgComfortCard').innerHTML = `
+        <div class="stat-card">
+          <div class="stat-label">Average Comfort Level</div>
+          <div class="stat-value">${avgComfort}</div>
+          <div style="font-size: 12px; color: #9ca3af;">out of 5</div>
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html> active" onclick="switchView('home')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <span>Quests</span>
+      </div>
+      <div class="nav-item" onclick="switchView('garden')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        </svg>
+        <span>Garden</span>
+      </div>
+      <div class="nav-item
